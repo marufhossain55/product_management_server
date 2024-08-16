@@ -24,7 +24,16 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-
+async function run() {
+  try {
+    await client.db('admin').command({ ping: 1 });
+    console.log(
+      'Pinged your deployment. You successfully connected to MongoDB!'
+    );
+  } finally {
+  }
+}
+run().catch(console.dir);
 app.get('/', (req, res) => {
   res.send('hello from product Management');
 });
