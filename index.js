@@ -35,6 +35,24 @@ async function run() {
       res.send(result);
     });
 
+    // get all job data from db for pagination
+    app.get('/all-products', async (req, res) => {
+      const size = parseInt(req.query.size);
+      const page = parseInt(req.query.page) - 1;
+      const result = await productCollection
+        .find()
+        .skip(page * size)
+        .limit(size)
+        .toArray();
+      res.send(result);
+    });
+
+    //get all job data count from db
+    app.get('/products-count', async (req, res) => {
+      const count = await productCollection.countDocuments();
+      res.send({ count });
+    });
+
     await client.db('admin').command({ ping: 1 });
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
