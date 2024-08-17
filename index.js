@@ -40,10 +40,42 @@ async function run() {
       const size = parseInt(req.query.size);
       const page = parseInt(req.query.page) - 1;
       const filter = req.query.filter;
-      let query = {};
-      if (filter) query = { category: filter };
+      const brandFilter = req.query.brandFilter;
+      const sort = req.query.sort;
+      const search = req.query.search;
+      const priceFilter = req.query.priceFilter;
+      let query = { title: { $regex: search, $options: 'i' } };
+      //   if (filter) query = { category: filter };
+      switch (priceFilter) {
+        case 'bellow 200':
+          query.price = { $lte: 200 };
+          break;
+        case '200-1000':
+          query.price = { $gte: 200, $lte: 1000 };
+          break;
+        default:
+        // code block
+      }
+      if (filter) query.category = filter;
+      if (brandFilter) query.brand = brandFilter;
+      let options = {};
+      //   if (sort) options = { sort: { price: sort === 'asc' ? 1 : -1 } };
+      switch (sort) {
+        case 'dsc':
+          options.sort = { price: -1 };
+          break;
+        case 'asc':
+          options.sort = { price: 1 };
+          break;
+        case 'dasc':
+          options.sort = { creation_date: -1 };
+          break;
+        default:
+        // code block
+      }
+
       const result = await productCollection
-        .find(query)
+        .find(query, options)
         .skip(page * size)
         .limit(size)
         .toArray();
@@ -53,8 +85,26 @@ async function run() {
     //get all job data count from db
     app.get('/products-count', async (req, res) => {
       const filter = req.query.filter;
-      let query = {};
-      if (filter) query = { category: filter };
+      const search = req.query.search;
+      const brandFilter = req.query.brandFilter;
+      const priceFilter = req.query.priceFilter;
+      console.log(priceFilter);
+
+      let query = { title: { $regex: search, $options: 'i' } };
+      //   if (filter) query = { category: filter };
+      if (filter) query.category = filter;
+      if (brandFilter) query.brand = brandFilter;
+
+      switch (priceFilter) {
+        case 'bellow 200':
+          query.price = { $lte: 200 };
+          break;
+        case '200-1000':
+          query.price = { $gte: 200, $lte: 1000 };
+          break;
+        default:
+        // code block
+      }
       const count = await productCollection.countDocuments(query);
       res.send({ count });
     });
