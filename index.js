@@ -8,11 +8,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 const corsOptions = {
-  // origin: ['http://localhost:5173'],
-  origin: [
-    'https://productmanagemnt.netlify.app',
-    'https://productmanagement-21a2f.web.app',
-  ],
+  origin: ['http://localhost:5173'],
+  // origin: ['https://productmanagement-21a2f.web.app'],
   Credentials: true,
   optionSuccessStatus: 200,
 };
