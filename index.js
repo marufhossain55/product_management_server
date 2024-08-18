@@ -4,14 +4,21 @@ require('dotenv').config();
 const port = process.env.PORT || 9000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 const corsOptions = {
-  origin: ['http://localhost:5173'],
+  // origin: ['http://localhost:5173'],
+  origin: [
+    'https://productmanagemnt.netlify.app',
+    'https://productmanagement-21a2f.web.app',
+  ],
   Credentials: true,
   optionSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.va5jejf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -105,7 +112,9 @@ async function run() {
         case '200-1000':
           query.price = { $gte: 200, $lte: 1000 };
           break;
-
+        case 'upper 1000':
+          query.price = { $gte: 1000 };
+          break;
         default:
         // code block
       }
