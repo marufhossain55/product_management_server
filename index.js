@@ -53,6 +53,9 @@ async function run() {
         case '200-1000':
           query.price = { $gte: 200, $lte: 1000 };
           break;
+        case 'upper 1000':
+          query.price = { $gte: 1000 };
+          break;
         default:
         // code block
       }
@@ -102,6 +105,7 @@ async function run() {
         case '200-1000':
           query.price = { $gte: 200, $lte: 1000 };
           break;
+
         default:
         // code block
       }
